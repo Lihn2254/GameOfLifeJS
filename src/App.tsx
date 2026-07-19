@@ -3,7 +3,7 @@ import { Game, getPresetNames } from "./core_game";
 
 const GRID_SIZE = 100;
 const INITIAL_SPEED_MS = 80;
-const CANVAS_RESOLUTION = 800; // High resolution for crisp rendering
+const CANVAS_RESOLUTION = 1200; // High resolution for crisp rendering
 
 function App() {
   const gameRef = useRef<Game | null>(null);
@@ -112,110 +112,113 @@ function App() {
 
   return (
     <main className="app-shell">
-      <section className="hero">
-        <div>
-          <p className="eyebrow">Conway's Game of Life</p>
-          <div></div>
-          <h1>Conway's Game Of Life</h1>
-          <p className="hero-copy">
-            Paint cells manually, load a known preset, then start the simulation
-            at whatever speed feels right.
-          </p>
+      <section className="header">
+        <div className="title-icon">
+          <img
+            id="game-icon"
+            src="/icon_white.png"
+            alt="Glider pattern"
+            width={100}
+            height={100}
+          />
+          <div className="title-container">
+            <span id="subtitle">Conway's</span>
+            <span id="title">Game Of Life</span>
+          </div>
         </div>
+        <p className="description">
+          Paint cells manually, load a known preset, then start the simulation
+          at whatever speed feels right.
+        </p>
       </section>
 
-      <div className="status-card">
-        <div>
-          <span className="status-label">Generation</span>
-          <strong>{game.getGeneration()}</strong>
-        </div>
-        <div>
-          <span className="status-label">State</span>
-          <strong>{isRunning ? "Running" : "Paused"}</strong>
-        </div>
-        <div>
-          <span className="status-label">Grid</span>
-          <strong>
-            {GRID_SIZE} x {GRID_SIZE}
-          </strong>
-        </div>
-      </div>
-
       <section className="workspace">
-        <aside className="panel controls-panel">
-          <div className="panel-section">
-            <div className="section-heading">Playback</div>
-            <div className="button-row">
-              <button
-                type="button"
-                className="primary"
-                onClick={startGame}
-                disabled={isRunning}
-              >
-                Start
-              </button>
-              <button type="button" onClick={stopGame} disabled={!isRunning}>
-                Stop
-              </button>
-            </div>
-            <div className="button-row">
-              <button type="button" onClick={resetGame}>
-                Reset
-              </button>
-              <button type="button" onClick={cleanGrid}>
-                Clean grid
-              </button>
-            </div>
-          </div>
-
-          <div className="panel-section">
-            <div className="section-heading">Preset</div>
-            <label className="field">
-              <span>Load a pattern</span>
-              <select
-                value={selectedPreset}
-                onChange={(event) => loadPreset(event.target.value)}
-              >
-                {presetNames.map((presetName) => (
-                  <option key={presetName} value={presetName}>
-                    {presetName}
-                  </option>
-                ))}
-              </select>
-            </label>
-          </div>
-
-          <div className="panel-section">
-            <div className="section-heading">Speed</div>
-            <label className="field slider-field">
-              <div className="slider-header">
-                <span>Generation timeout</span>
-                <strong>{speedMs} ms</strong>
+        <aside>
+          <div className="panel controls-panel">
+            <div className="panel-section">
+              <div className="section-heading">Playback</div>
+              <div className="button-row">
+                <button
+                  type="button"
+                  className="primary"
+                  onClick={startGame}
+                  disabled={isRunning}
+                >
+                  Start
+                </button>
+                <button type="button" onClick={stopGame} disabled={!isRunning}>
+                  Stop
+                </button>
               </div>
-              <input
-                type="range"
-                min="40"
-                max="1000"
-                step="20"
-                value={speedMs}
-                onChange={(event) => setSpeedMs(Number(event.target.value))}
-              />
-            </label>
-          </div>
+              <div className="button-row">
+                <button type="button" onClick={resetGame}>
+                  Reset
+                </button>
+                <button type="button" onClick={cleanGrid}>
+                  Clean grid
+                </button>
+              </div>
+            </div>
 
-          <div className="panel-section note">
-            Click cells while the game is stopped. When you start the
-            simulation, the grid advances using the selected timeout.
+            <div className="panel-section">
+              <div className="section-heading">Preset</div>
+              <label className="field">
+                <span>Load a pattern</span>
+                <select
+                  value={selectedPreset}
+                  onChange={(event) => loadPreset(event.target.value)}
+                >
+                  {presetNames.map((presetName) => (
+                    <option key={presetName} value={presetName}>
+                      {presetName}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+
+            <div className="panel-section">
+              <div className="section-heading">Speed</div>
+              <label className="field slider-field">
+                <div className="slider-header">
+                  <div>
+                    <span>Generation timeout</span>
+                    <span>(Less is faster)</span>
+                  </div>
+                  <strong>{speedMs} ms</strong>
+                </div>
+                <input
+                  type="range"
+                  min="20"
+                  max="1000"
+                  step="20"
+                  value={speedMs}
+                  onChange={(event) => setSpeedMs(Number(event.target.value))}
+                />
+              </label>
+            </div>
+          </div>
+          <div className="gen-card">
+            <span className="status-label">Generation</span>
+            <strong>{game.getGeneration()}</strong>
           </div>
         </aside>
 
-        <canvas
-          ref={canvasRef}
-          className="board canvas-board"
-          width={CANVAS_RESOLUTION}
-          height={CANVAS_RESOLUTION}
-          onClick={handleCanvasClick}
-        />
+        <div className="canvas-container">
+          <canvas
+            ref={canvasRef}
+            className="board"
+            width={CANVAS_RESOLUTION}
+            height={CANVAS_RESOLUTION}
+            onClick={handleCanvasClick}
+          />
+          <div>
+            <span className="status-label">Grid Size</span>
+            <strong>
+              {GRID_SIZE} x {GRID_SIZE}
+            </strong>
+          </div>
+        </div>
       </section>
     </main>
   );
