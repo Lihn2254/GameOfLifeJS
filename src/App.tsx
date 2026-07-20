@@ -10,6 +10,7 @@ function App() {
   const [, forceRender] = useReducer((value: number) => value + 1, 0);
   const [isRunning, setIsRunning] = useState(false);
   const [gridSize, setGridSize] = useState(100);
+  const [gridSizeInput, setGridSizeInput] = useState("100");
   const [speedMs, setSpeedMs] = useState(INITIAL_SPEED_MS);
   const [selectedPreset, setSelectedPreset] = useState("glider");
 
@@ -58,10 +59,14 @@ function App() {
     }
   });
 
-  const handleGridSizeChange = (newGridSize: number) => {
-    if (newGridSize > 0) {
-      setGridSize(newGridSize);
-      gameRef.current = new Game(newGridSize);
+  const handleGridSizeChange = (value: string) => {
+    setGridSizeInput(value);
+
+    const parsedGridSize = Number.parseInt(value, 10);
+
+    if (Number.isInteger(parsedGridSize) && parsedGridSize >= 1) {
+      setGridSize(parsedGridSize);
+      gameRef.current = new Game(parsedGridSize);
     }
   };
 
@@ -222,10 +227,8 @@ function App() {
             <input
               id="grid-size"
               type="text"
-              value={gridSize}
-              onChange={(e) =>
-                handleGridSizeChange(Number.parseInt(e.target.value))
-              }
+              value={gridSizeInput}
+              onChange={(e) => handleGridSizeChange(e.target.value)}
             />
           </div>
         </div>
