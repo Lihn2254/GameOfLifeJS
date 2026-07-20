@@ -1,20 +1,20 @@
 import { useEffect, useReducer, useRef, useState } from "react";
 import { Game, getPresetNames } from "./core_game";
 
-const GRID_SIZE = 100;
 const INITIAL_SPEED_MS = 80;
-const CANVAS_RESOLUTION = 1200; // High resolution for crisp rendering
+const CANVAS_RESOLUTION = 1200;
 
 function App() {
   const gameRef = useRef<Game | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [, forceRender] = useReducer((value: number) => value + 1, 0);
   const [isRunning, setIsRunning] = useState(false);
+  const [gridSize, setGridSize] = useState(100);
   const [speedMs, setSpeedMs] = useState(INITIAL_SPEED_MS);
   const [selectedPreset, setSelectedPreset] = useState("glider");
 
   if (gameRef.current === null) {
-    gameRef.current = new Game(GRID_SIZE);
+    gameRef.current = new Game(gridSize);
   }
 
   const game = gameRef.current;
@@ -43,14 +43,12 @@ function App() {
     // Clear previous frame
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    const cellSize = canvas.width / GRID_SIZE;
+    const cellSize = canvas.width / gridSize;
 
     // Paint alive cells
-    ctx.fillStyle = "#7ff3cc"; // Matches var(--accent)
+    ctx.fillStyle = "#7ff3cc";
 
     for (const cell of aliveCells) {
-      // cell.y represents the column (X axis), cell.x represents the row (Y axis)
-      // We subtract 1 from the size to simulate a subtle grid line gap
       ctx.fillRect(
         cell.y * cellSize,
         cell.x * cellSize,
@@ -58,7 +56,14 @@ function App() {
         cellSize - 1,
       );
     }
-  }); // Runs after every render
+  });
+
+  const handleGridSizeChange = (newGridSize: number) => {
+    if (newGridSize > 0) {
+      setGridSize(newGridSize);
+      gameRef.current = new Game(newGridSize);
+    }
+  };
 
   const startGame = () => setIsRunning(true);
   const stopGame = () => setIsRunning(false);
@@ -103,7 +108,7 @@ function App() {
     const clickX = (event.clientX - rect.left) * scaleX;
     const clickY = (event.clientY - rect.top) * scaleY;
 
-    const cellSize = canvas.width / GRID_SIZE;
+    const cellSize = canvas.width / gridSize;
     const col = Math.floor(clickX / cellSize);
     const row = Math.floor(clickY / cellSize);
 
@@ -212,11 +217,16 @@ function App() {
             height={CANVAS_RESOLUTION}
             onClick={handleCanvasClick}
           />
-          <div>
+          <div className="grid-size-container">
             <span className="status-label">Grid Size</span>
-            <strong>
-              {GRID_SIZE} x {GRID_SIZE}
-            </strong>
+            <input
+              id="grid-size"
+              type="text"
+              value={gridSize}
+              onChange={(e) =>
+                handleGridSizeChange(Number.parseInt(e.target.value))
+              }
+            />
           </div>
         </div>
       </section>

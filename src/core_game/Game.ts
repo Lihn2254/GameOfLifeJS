@@ -44,6 +44,14 @@ export class Game {
     return this.generation
   }
 
+  getGridSize(): number {
+    return this.gridSize;
+  }
+
+  setGridSize(gridSize: number): void {
+    this.gridSize = gridSize;
+  }
+
   setInitialState(initialState: Cell[]): void {
     this.initialState = initialState.map((cell) => ({ ...cell }))
     this.cleanGrid()
