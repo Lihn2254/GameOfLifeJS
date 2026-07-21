@@ -328,6 +328,13 @@ input[type="range"] {
   color: #ecfff8;
 }
 
+.control-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
 @media (max-width: 1100px) {
   .hero,
   .workspace {

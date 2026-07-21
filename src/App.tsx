@@ -150,22 +150,39 @@ function App() {
               <div className="button-row">
                 <button
                   type="button"
-                  className="primary"
+                  className="primary control-button"
                   onClick={startGame}
                   disabled={isRunning}
                 >
+                  <img src="/play.svg" alt="Start" width={35} height={35} />
                   Start
                 </button>
-                <button type="button" onClick={stopGame} disabled={!isRunning}>
+                <button
+                  type="button"
+                  onClick={stopGame}
+                  disabled={!isRunning}
+                  className="control-button"
+                >
+                  <img src="/pause.svg" alt="Stop" width={35} height={35} />
                   Stop
                 </button>
               </div>
               <div className="button-row">
-                <button type="button" onClick={resetGame}>
+                <button
+                  type="button"
+                  onClick={resetGame}
+                  className="control-button"
+                >
+                  <img src="/reset.svg" alt="Reset" width={35} height={35} />
                   Reset
                 </button>
-                <button type="button" onClick={cleanGrid}>
-                  Clean grid
+                <button
+                  type="button"
+                  onClick={cleanGrid}
+                  className="control-button"
+                >
+                  <img src="/clean.svg" alt="Clean" width={35} height={35} />
+                  Clean
                 </button>
               </div>
             </div>
